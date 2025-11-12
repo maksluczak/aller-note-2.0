@@ -23,7 +23,7 @@ export async function apiFetch(path, options = {}) {
   let res = await rawFetch(path, options);
 
   if (res.status === 401) {
-    const refreshRes = await rawFetch("/refresh", { method: "GET" });
+    const refreshRes = await rawFetch("/user/refresh", { method: "GET" });
 
     if (refreshRes.ok) {
       const data = await refreshRes.json();
