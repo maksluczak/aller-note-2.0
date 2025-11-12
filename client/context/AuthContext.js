@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
   const setUserFromToken = (token) => {
     try {
       const decoded = jwtDecode(token);
-      setUser(decoded.UserInfo || decoded);
+        setUser({ id: decoded._id, email: decoded.email });
     } catch (err) {
       console.error('Token decode error', err);
       setUser(null);
