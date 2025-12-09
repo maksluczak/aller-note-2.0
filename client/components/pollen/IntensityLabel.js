@@ -1,10 +1,5 @@
 import React from "react";
 
-/**
- *
- * @param {intensity} 0 | 1 | 2 intensity of the allergen in the selected area
- * @returns
- */
 export default function IntensityLabel({ intensity = 0 }) {
   const textLabel = ["Niskie", "Umiarkowane", "Wysokie"];
   const bgColor = ["bg-[#C3FFD6]", "bg-[#BAEBFF]", "bg-[#FFCFCF]"];

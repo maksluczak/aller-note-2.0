@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { apiFetch } from "@/lib/api";
 
-export default function VoivodeshipSelect() {
+export default function VoivodeshipSelect({ defaultLocation, setDefaultLocation }) {
   const { user } = useAuth();
   const userId = user?.id;
-  const [defaultLocation, setDefaultLocation] = useState("");
+  // const [defaultLocation, setDefaultLocation] = useState(0);
 
   const VOIVODESHIPS = [
     { name: "Dolnośląskie", value: 0 },
@@ -34,7 +34,7 @@ export default function VoivodeshipSelect() {
         const res = await apiFetch(`/user/me/location/${userId}`);
 
         if (!res || !res.defaultLocation) {
-          setDefaultLocation(4);
+          setDefaultLocation(5);
           return;
         }
 
@@ -42,16 +42,16 @@ export default function VoivodeshipSelect() {
         const voivodeshipName = VOIVODESHIPS.find(
           (v) => v.name === userLocation
         );
-        setDefaultLocation(voivodeshipName ? voivodeshipName.value : 4);
+        setDefaultLocation(voivodeshipName ? voivodeshipName.value : 5);
       } catch (err) {
         console.error("Błąd przy pobieraniu lokalizacji:", err);
-        setDefaultLocation(4);
+        setDefaultLocation(5);
       }
     };
     if (user) {
       fetchUserLocation();
     } else {
-      setDefaultLocation(4);
+      setDefaultLocation(5);
     }
   }, [user]);
 

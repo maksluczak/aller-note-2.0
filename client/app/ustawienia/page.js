@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import VoivodeshipSelect2 from "@/components/alergeny/VoivodeshipSelect2";
+import VoivodeshipSelect2 from "@/components/pollen/VoivodeshipSelect2";
 import { useAuth } from "@/context/AuthContext";
 
 export default function SettingsPage() {

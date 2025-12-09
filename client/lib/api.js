@@ -7,7 +7,7 @@ async function rawFetch(path, options = {}) {
     ...options.headers,
   };
 
-  if (token) {
+  if (token && options.auth !== false) {
     headers.Authorization = `Bearer ${token}`;
   }
 
