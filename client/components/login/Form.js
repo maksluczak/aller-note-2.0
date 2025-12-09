@@ -61,7 +61,7 @@ export default function Form({
     }
 
     try {
-      const path = registration ? "/user/register" : "/user/login";
+      const path = registration ? "/auth/register" : "/auth/login";
       const body = registration
         ? { username: inputName, email: inputEmail, password: inputPassword, defaultLocation: defaultLocation}
         : { email: inputEmail, password: inputPassword };

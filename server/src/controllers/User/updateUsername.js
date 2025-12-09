@@ -14,7 +14,7 @@ const updateUsername = async (req, res) => {
             { username },
             { new: true }
         );
-        return res.status(201).json({ message: `Username updated: ${user}` });
+        return res.status(200).json({ message: "Username updated", user });
     } catch (err) {
         return res.status(404).json({ error: err.message });
     }

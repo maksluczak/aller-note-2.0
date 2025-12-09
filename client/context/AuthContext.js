@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await apiFetch("/user/logout", { method: "POST" });
+      await apiFetch("/auth/logout", { method: "POST" });
     } catch (err) {
       console.log("Logout error:", err);
     } finally {
@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
 
   const refreshToken = async () => {
     try {
-      const res = await apiFetch("/user/refresh", { method: "GET" });
+      const res = await apiFetch("/auth/refresh", { method: "GET" });
       if (res?.accessToken) {
         localStorage.setItem("jwt", res.accessToken);
         setUserFromToken(res.accessToken);
