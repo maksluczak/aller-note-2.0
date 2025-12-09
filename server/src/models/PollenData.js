@@ -27,7 +27,7 @@ const pollenDataSchema = new Schema({
         type: Number,
         default: 0.0
     },
-    regweedPollen: {
+    ragweedPollen: {
         type: Number,
         default: 0.0
     },

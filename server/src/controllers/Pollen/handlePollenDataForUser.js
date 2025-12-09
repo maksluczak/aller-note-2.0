@@ -2,7 +2,7 @@ const User = require("../../models/User");
 const PollenData = require("../../models/PollenData");
 
 const handlePollenDataForUser = async (req, res) => {
-    const userId = req.user;
+    const userId = req.params.id;
     const user = await User.findById(userId).exec();
 
     if (!user) {
@@ -12,7 +12,7 @@ const handlePollenDataForUser = async (req, res) => {
     const locationId = req.params.pollenLocationId;
     const date = req.params.pollenDataDate;
 
-    const { alderPollen, birchPollen, grassPollen, mugwortPollen, olivePollen, regweedPollen } = req.body;
+    const { alderPollen, birchPollen, grassPollen, mugwortPollen, olivePollen, ragweedPollen } = req.body;
 
     const pollenData = await PollenData.create({
         date: date,
@@ -21,7 +21,7 @@ const handlePollenDataForUser = async (req, res) => {
         grassPollen: grassPollen,
         mugwortPollen: mugwortPollen,
         olivePollen: olivePollen,
-        regweedPollen: regweedPollen,
+        ragweedPollen: ragweedPollen,
         pollenDataUser: user._id,
         pollenDataLocation: locationId
     });
