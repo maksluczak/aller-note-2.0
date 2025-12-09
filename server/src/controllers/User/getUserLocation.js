@@ -26,7 +26,7 @@ const getUserLocation = async (req, res) => {
 
         return res.status(200).json({
             defaultLocation: voivodeship,
-            message: "Location found succesfully",
+            message: "Location found successfully",
         });
     } catch (err) {
         return res.status(404).json({ error: err.message });

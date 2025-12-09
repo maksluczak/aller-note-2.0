@@ -38,16 +38,37 @@ const getPollenDataFromExternalAPI = async (req, res) => {
             return res.status(500).json({ error: "Niepoprawne dane z API" });
         }
 
+        const currentHour = new Date().getHours();
+        const pollenIntensity = [
+            data.hourly.alder_pollen?.[currentHour] ?? 0,
+            data.hourly.birch_pollen?.[currentHour] ?? 0,
+            data.hourly.grass_pollen?.[currentHour] ?? 0,
+            data.hourly.mugwort_pollen?.[currentHour] ?? 0,
+            data.hourly.olive_pollen?.[currentHour] ?? 0,
+            data.hourly.ragweed_pollen?.[currentHour] ?? 0
+        ];
+
+        const maxIntensity = Math.max(...pollenIntensity);
+        const maxIndex = pollenIntensity.indexOf(maxIntensity);
+
+        const pollenIntensityScale = pollenIntensity.map(pollen => {
+            if (pollen <= 1) return 0;
+            if (pollen < 50) return 1;
+            return 2;
+        });
+
         const pollenData = {
-            latitude,
-            longitude,
-            timezone,
-            alder_pollen: data.hourly.alder_pollen?.[12] ?? null,
-            birch_pollen: data.hourly.birch_pollen?.[12] ?? null,
-            grass_pollen: data.hourly.grass_pollen?.[12] ?? null,
-            mugwort_pollen: data.hourly.mugwort_pollen?.[12] ?? null,
-            olive_pollen: data.hourly.olive_pollen?.[12] ?? null,
-            ragweed_pollen: data.hourly.ragweed_pollen?.[12] ?? null
+            latitude: latitude,
+            longitude: longitude,
+            timezone: timezone,
+            pollen_intensity_table: pollenIntensity,
+            alder_pollen: pollenIntensityScale[0],
+            birch_pollen: pollenIntensityScale[1],
+            grass_pollen: pollenIntensityScale[2],
+            mugwort_pollen: pollenIntensityScale[3],
+            olive_pollen: pollenIntensityScale[4],
+            ragweed_pollen: pollenIntensityScale[5],
+            highest_pollen_intensity_index: maxIndex
         };
 
         res.json(pollenData);
