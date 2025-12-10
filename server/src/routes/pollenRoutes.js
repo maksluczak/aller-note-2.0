@@ -3,6 +3,6 @@ const pollenController = require("../controllers/Pollen");
 
 const router = express.Router();
 
-router.get("/:pollenLocationId", pollenController.getPollenDataFromExternalAPI);
+router.get("/:voivodeship", pollenController.getPollenDataFromExternalAPI);
 
 module.exports = router;

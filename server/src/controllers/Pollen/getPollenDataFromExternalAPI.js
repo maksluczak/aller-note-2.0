@@ -2,9 +2,11 @@ const Location = require("../../models/Location");
 
 const getPollenDataFromExternalAPI = async (req, res) => {
     try {
-        const locationId = req.params.pollenLocationId;
-        const location = await Location.findById(locationId).exec();
-
+        const voivodeship = req.params.voivodeship;
+        if (!voivodeship) {
+            return res.status(400).json({ message: "Voivodeship name is required." });
+        }
+        const location = await Location.findOne({ voivodeship }).exec();
         if (!location) {
             return res.status(404).json({ message: "Nie znaleziono lokalizacji" });
         }
