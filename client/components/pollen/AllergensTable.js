@@ -4,7 +4,7 @@ import IntensityLabel from "./IntensityLabel";
 import {useState} from "react";
 import {apiFetch} from "@/lib/api";
 
-export default function AllergensTable() {
+export default function AllergensTable({ defaultLocation, VOIVODESHIPS }) {
     const [alderPollenIntensity, setAlderPollenIntensity] = useState(0);
     const [birchPollenIntensity, setBirchPollenIntensity] = useState(0);
     const [grassPollenIntensity, setGrassPollenIntensity] = useState(0);
@@ -23,8 +23,11 @@ export default function AllergensTable() {
 
     useEffect(() => {
         const fetchPollenData = async () => {
+            const voivodeship = VOIVODESHIPS[defaultLocation].name;
+            console.log(voivodeship);
             try {
-                const data = await apiFetch("");
+                const data = await apiFetch(`/pollen/${voivodeship}`);
+                console.log(data);
 
                 if (data) {
                     setAlderPollenIntensity(data.alder_pollen);
@@ -33,14 +36,14 @@ export default function AllergensTable() {
                     setMugwortPollenIntensity(data.mugwort_pollen);
                     setOlivePollenIntensity(data.olive_pollen);
                     setRagweedPollenIntensity(data.ragweed_pollen);
-                } else {
-
                 }
             } catch (err) {
                 console.log({error: err, message: "Error fetching data"});
             }
-        }
-    })
+        };
+
+        fetchPollenData();
+    }, [defaultLocation]);
 
   return (
     <ul className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-32">

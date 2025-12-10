@@ -1,32 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { apiFetch } from "@/lib/api";
 
-export default function VoivodeshipSelect({ defaultLocation, setDefaultLocation }) {
+export default function VoivodeshipSelect({ defaultLocation, setDefaultLocation, VOIVODESHIPS }) {
   const { user } = useAuth();
   const userId = user?.id;
-  // const [defaultLocation, setDefaultLocation] = useState(0);
-
-  const VOIVODESHIPS = [
-    { name: "Dolnośląskie", value: 0 },
-    { name: "Kujawsko-pomorskie", value: 1 },
-    { name: "Lubelskie", value: 2 },
-    { name: "Lubuskie", value: 3 },
-    { name: "Łódzkie", value: 4 },
-    { name: "Małopolskie", value: 5 },
-    { name: "Mazowieckie", value: 6 },
-    { name: "Opolskie", value: 7 },
-    { name: "Podkarpackie", value: 8 },
-    { name: "Podlaskie", value: 9 },
-    { name: "Pomorskie", value: 10 },
-    { name: "Śląskie", value: 11 },
-    { name: "Świętokrzyskie", value: 12 },
-    { name: "Warmińsko-mazurskie", value: 13 },
-    { name: "Wielkopolskie", value: 14 },
-    { name: "Zachodniopomorskie", value: 15 },
-  ];
 
   useEffect(() => {
     const fetchUserLocation = async () => {
