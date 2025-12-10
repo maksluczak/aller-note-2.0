@@ -60,10 +60,7 @@ const getPollenDataFromExternalAPI = async (req, res) => {
         });
 
         const pollenData = {
-            latitude: latitude,
-            longitude: longitude,
-            timezone: timezone,
-            pollen_intensity_table: pollenIntensity,
+            voivodeship: voivodeship,
             alder_pollen: pollenIntensityScale[0],
             birch_pollen: pollenIntensityScale[1],
             grass_pollen: pollenIntensityScale[2],
