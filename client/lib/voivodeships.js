@@ -1,0 +1,18 @@
+export const VOIVODESHIPS = [
+    { name: "Dolnośląskie",         vvd: "Dolnośląskim",        value: 0 },
+    { name: "Kujawsko-pomorskie",   vvd: "Kujawsko-pomorskim",  value: 1 },
+    { name: "Lubelskie",            vvd: "Lubelskim",           value: 2 },
+    { name: "Lubuskie",             vvd: "Lubuskim",            value: 3 },
+    { name: "Łódzkie",              vvd: "Łódzkim",             value: 4 },
+    { name: "Małopolskie",          vvd: "Małopolskim",         value: 5 },
+    { name: "Mazowieckie",          vvd: "Mazowieckim",         value: 6 },
+    { name: "Opolskie",             vvd: "Opolskim",            value: 7 },
+    { name: "Podkarpackie",         vvd: "Podkarpackim",        value: 8 },
+    { name: "Podlaskie",            vvd: "Podlaskim",           value: 9 },
+    { name: "Pomorskie",            vvd: "Pomorskim",           value: 10 },
+    { name: "Śląskie",              vvd: "Śląskim",             value: 11 },
+    { name: "Świętokrzyskie",       vvd: "Świętokrzyskim",      value: 12 },
+    { name: "Warmińsko-mazurskie",  vvd: "Warmińsko-mazurskim", value: 13 },
+    { name: "Wielkopolskie",        vvd: "Wielkopolskim",       value: 14 },
+    { name: "Zachodniopomorskie",   vvd: "Zachodniopomorskim",  value: 15 },
+];

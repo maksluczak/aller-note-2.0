@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import VoivodeshipSelect2 from "@/components/pollen/VoivodeshipSelect2";
 import { useAuth } from "@/context/AuthContext";
 import { apiFetch } from "@/lib/api";
+import LocationSection from "@/components/settings/LocationSection";
 
 export default function SettingsPage() {
     const { user, logout } = useAuth();
@@ -15,6 +15,7 @@ export default function SettingsPage() {
     const [inputUsername, setInputUsername] = useState("");
     const [inputPassword, setInputPassword] = useState("");
     const [inputRepeatedPassword, setInputRepeatedPassword] = useState("");
+    const [defaultLocation, setDefaultLocation] = useState(0);
 
     useEffect(() => {
         if (!userId) return;
@@ -184,12 +185,11 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            <div className="py-5 px-4">
-                <label className="text-gray-800 text-2xl font-bold block mb-2">Edytuj województwo</label>
-                <div className="flex items-center gap-2 md:gap-4">
-                    <VoivodeshipSelect2 />
-                </div>
-            </div>
+            <LocationSection
+                defaultLocation={defaultLocation}
+                setDefaultLocation={setDefaultLocation}
+                userId={userId}
+            />
         </section>
     );
 }
