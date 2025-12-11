@@ -6,6 +6,7 @@ const router = express.Router();
 router.use(verifyJWT);
 
 router.get("/me/location/:id", userController.getUserLocation);
+router.put("/me/location/:id", userController.updateLocation);
 router.get("/:id", userController.getUserById);
 router.post("/:id", userController.handlePollenDataForUser);
 router.put("/username/:id", userController.updateUsername);
