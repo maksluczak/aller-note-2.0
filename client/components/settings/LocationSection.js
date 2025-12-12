@@ -1,16 +1,26 @@
-"use client"
-import {VOIVODESHIPS} from "@/lib/voivodeships";
-import VoivodeshipSelect from "@/components/pollen/VoivodeshipSelect";
-import {apiFetch} from "@/lib/api";
+"use client";
 
-export default function LocationSection({ defaultLocation, setDefaultLocation, userId }) {
+import { VOIVODESHIPS } from "@/lib/voivodeships";
+import VoivodeshipSelect from "@/components/pollen/VoivodeshipSelect";
+import { apiFetch } from "@/lib/api";
+
+export default function LocationSection({
+        defaultLocation,
+        setDefaultLocation,
+        userId,
+        onReload,
+    }) {
     async function saveLocation(index) {
         const voivodeship = VOIVODESHIPS[index].name;
 
         await apiFetch(`/user/me/location/${userId}`, {
             method: "PUT",
-            body: JSON.stringify({ voivodeship })
+            body: JSON.stringify({ voivodeship }),
         });
+
+        if (onReload) {
+            await onReload();
+        }
     }
 
     return (

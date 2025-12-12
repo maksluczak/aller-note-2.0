@@ -15,21 +15,26 @@ export default function SettingsPage() {
     const [inputUsername, setInputUsername] = useState("");
     const [inputPassword, setInputPassword] = useState("");
     const [inputRepeatedPassword, setInputRepeatedPassword] = useState("");
-    const [defaultLocation, setDefaultLocation] = useState(0);
+    const [defaultLocation, setDefaultLocation] = useState(4);
 
-    useEffect(() => {
+    async function fetchUser() {
         if (!userId) return;
 
-        async function fetchUser() {
-            try {
-                const data = await apiFetch(`/user/${userId}`);
-                if (!data) return;
-                setUsername(data.username || "");
-            } catch (err) {
-                console.error("Błąd:", err);
-            }
-        }
+        try {
+            const data = await apiFetch(`/user/${userId}`);
+            const voivodeship = data.userDefaultLocation;
+            if (!data) return;
 
+            console.log(voivodeship);
+
+            setUsername(data.username || "");
+            setDefaultLocation(data.userDefaultLocation ?? 4);
+        } catch (err) {
+            console.error("Błąd:", err);
+        }
+    }
+
+    useEffect(() => {
         fetchUser();
     }, [userId]);
 
@@ -100,7 +105,9 @@ export default function SettingsPage() {
             </header>
 
             <div className="py-5 px-4">
-                <label className="text-gray-800 text-2xl font-bold block mb-2">Edytuj nazwę użytkownika</label>
+                <label className="text-gray-800 text-2xl font-bold block mb-2">
+                    Edytuj nazwę użytkownika
+                </label>
                 <div className="relative flex items-center gap-2">
                     <input
                         type="text"
@@ -139,7 +146,9 @@ export default function SettingsPage() {
             </div>
 
             <div className="py-5 px-4">
-                <label className="text-gray-800 text-2xl font-bold block mb-2">Edytuj hasło</label>
+                <label className="text-gray-800 text-2xl font-bold block mb-2">
+                    Edytuj hasło
+                </label>
                 <div className="flex flex-col gap-4">
                     <input
                         type="password"
@@ -189,6 +198,7 @@ export default function SettingsPage() {
                 defaultLocation={defaultLocation}
                 setDefaultLocation={setDefaultLocation}
                 userId={userId}
+                onReload={fetchUser}
             />
         </section>
     );
