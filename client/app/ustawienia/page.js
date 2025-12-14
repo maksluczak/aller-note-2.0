@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { apiFetch } from "@/lib/api";
 import LocationSection from "@/components/settings/LocationSection";
+import {VOIVODESHIPS} from "@/lib/voivodeships";
 
 export default function SettingsPage() {
     const { user, logout } = useAuth();
@@ -22,13 +23,13 @@ export default function SettingsPage() {
 
         try {
             const data = await apiFetch(`/user/${userId}`);
-            const voivodeship = data.userDefaultLocation;
             if (!data) return;
-
-            console.log(voivodeship);
+            const voivodeship = data.userLocation.voivodeship;
+            const location = VOIVODESHIPS.find((v) => v.name === voivodeship);
+            const locationIndex = location?.value;
 
             setUsername(data.username || "");
-            setDefaultLocation(data.userDefaultLocation ?? 4);
+            setDefaultLocation(locationIndex ?? 4);
         } catch (err) {
             console.error("Błąd:", err);
         }

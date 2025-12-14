@@ -1,5 +1,7 @@
 "use client";
-import React from "react";
+import React, {useEffect} from "react";
+import {apiFetch} from "@/lib/api";
+import {useAuth} from "@/context/AuthContext";
 
 export default function VoivodeshipSelect({
         defaultLocation,
@@ -8,6 +10,30 @@ export default function VoivodeshipSelect({
         mode = "pollen",
         onSave = null
     }) {
+    const { user } = useAuth();
+    const userId = user?.id;
+
+    useEffect(() => {
+        if (mode !== "pollen") return;
+        const loadUserLocation = async () => {
+            if (!userId) {
+                setDefaultLocation(5);
+                return;
+            }
+            try {
+                const res = await apiFetch(`/user/me/location/${userId}`);
+                const found = VOIVODESHIPS.find(
+                    (v) => v.name === res?.defaultLocation
+                );
+                setDefaultLocation(found?.value ?? 5);
+            } catch (e) {
+                console.error("Błąd w pobieraniu lokalizacji:", e);
+                setDefaultLocation(5);
+            }
+        };
+        loadUserLocation();
+    }, [userId, mode, VOIVODESHIPS, setDefaultLocation]);
+
     const handleChange = async (value) => {
         setDefaultLocation(value);
 
