@@ -25,7 +25,7 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'PollenData'
     }],
-    userDefaultLocation : {
+    userLocation : {
         type: Schema.Types.ObjectId,
         ref: 'Location'
     }

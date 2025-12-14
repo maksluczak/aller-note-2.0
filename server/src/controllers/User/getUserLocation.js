@@ -10,7 +10,7 @@ const getUserLocation = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        const defaultLocation = user.userDefaultLocation;
+        const defaultLocation = user.userLocation;
 
         if (!defaultLocation) {
             return res.status(400).json({ message: "User location not found" });

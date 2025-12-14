@@ -27,7 +27,7 @@ const handleRegister = async (req, res) => {
             username: username,
             email: email,
             password: hashedPwd,
-            userDefaultLocation: defaultLocation
+            userLocation: defaultLocation
         });
 
         console.log(newUser);
