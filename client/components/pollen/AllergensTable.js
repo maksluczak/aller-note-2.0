@@ -11,7 +11,7 @@ export default function AllergensTable({ defaultLocation, VOIVODESHIPS }) {
     const [mugwortPollenIntensity, setMugwortPollenIntensity] = useState(0);
     const [olivePollenIntensity, setOlivePollenIntensity] = useState(0);
     const [ragweedPollenIntensity, setRagweedPollenIntensity] = useState(0);
-
+    
     const POLLEN_DATA = [
         { name: "Olcha", intensity: alderPollenIntensity, setter: setAlderPollenIntensity },
         { name: "Brzoza", intensity: birchPollenIntensity, setter: setBirchPollenIntensity },
