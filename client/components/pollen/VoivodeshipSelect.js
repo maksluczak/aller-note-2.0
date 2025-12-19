@@ -22,7 +22,6 @@ export default function VoivodeshipSelect({
             }
             try {
                 const res = await apiFetch(`/user/me/location/${userId}`);
-                console.log("odpowiedź", res);
                 const found = VOIVODESHIPS.find(
                     (v) => v.name === res?.defaultLocation
                 );

@@ -3,6 +3,7 @@
 import React, {useState} from "react";
 import {useAuth} from "@/context/AuthContext";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary";
+import Link from "next/link";
 
 export default function SavePollen() {
     const [isHidden, setIsHidden] = useState(true);
@@ -40,12 +41,16 @@ export default function SavePollen() {
                             Zaloguj się lub załóż konto, aby zapisywać pylenie i wracać do historii w dowolnym momencie.
                         </p>
                         <div className="flex justify-around pt-4 gap-6">
-                            <ButtonPrimary>
-                                Zaloguj się
-                            </ButtonPrimary>
-                            <ButtonPrimary>
-                                Zarejestruj się
-                            </ButtonPrimary>
+                            <Link href="/login">
+                                <ButtonPrimary>
+                                    Zaloguj się
+                                </ButtonPrimary>
+                            </Link>
+                            <Link href="/rejestracja">
+                                <ButtonPrimary>
+                                    Zarejestruj się
+                                </ButtonPrimary>
+                            </Link>
                         </div>
                     </div>
                 </div>

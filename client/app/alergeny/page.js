@@ -3,7 +3,6 @@ import React, {useState} from "react";
 import AllergensTable from "@/components/pollen/AllergensTable";
 import VoivodeshipSelect from "@/components/pollen/VoivodeshipSelect";
 import {VOIVODESHIPS} from "@/lib/voivodeships";
-import SavePollen from "@/components/pollen/SavePollen";
 
 export default function Allergens() {
     const [defaultLocation, setDefaultLocation] = useState(5);
@@ -24,15 +23,10 @@ export default function Allergens() {
                     </span>
                 </h1>
             </header>
-            <section className="pb-12">
-                <AllergensTable
-                    defaultLocation={defaultLocation}
-                    VOIVODESHIPS={VOIVODESHIPS}
-                />
-            </section>
-            <section className="pb-10">
-                <SavePollen />
-            </section>
+            <AllergensTable
+                defaultLocation={defaultLocation}
+                VOIVODESHIPS={VOIVODESHIPS}
+            />
         </>
     );
 }
