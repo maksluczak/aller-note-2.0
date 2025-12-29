@@ -99,6 +99,10 @@ export default function SettingsPage() {
         }
     }
 
+    console.log("user", user);
+
+    if (!user) return <p className="flex flex-col gap-5 pt-24 pb-10 lg:min-h-[calc(100vh-40px)]">Musisz być zalogowany, aby korzystać z ustawień.</p>
+
     return (
         <section className="flex flex-col gap-5 pt-24 pb-10 lg:min-h-[calc(100vh-40px)]">
             <header className="grid gap-3 py-5 px-4 grid-cols-2 lg:grid-cols-[1fr_.7fr] border-b border-gray-200 text-4xl font-bold">

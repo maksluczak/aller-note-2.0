@@ -3,7 +3,6 @@ import React, {useEffect} from "react";
 import IntensityLabel from "./IntensityLabel";
 import {useState} from "react";
 import {apiFetch} from "@/lib/api";
-import SavePollen from "@/components/pollen/SavePollen";
 
 export default function AllergensTable({ defaultLocation, VOIVODESHIPS }) {
     const [alderPollenIntensity, setAlderPollenIntensity] = useState(0);
@@ -43,14 +42,9 @@ export default function AllergensTable({ defaultLocation, VOIVODESHIPS }) {
         fetchPollenData();
     }, [defaultLocation]);
 
-    const handleSavePollen = (event) => {
-        event.preventDefault();
-        // TODO: create json to send to db
-    }
-
   return (
       <>
-          <section className="pb-12">
+          <section className="pb-12 lg:pb-40">
               <ul className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-32">
                   <header className="grid gap-3 py-5 px-4 grid-cols-2 lg:grid-cols-[1fr_.7fr] border-b border-gray-200 font-light uppercase">
                       <span>Nazwa</span>
@@ -72,9 +66,6 @@ export default function AllergensTable({ defaultLocation, VOIVODESHIPS }) {
                       </li>
                   ))}
               </ul>
-          </section>
-          <section className="pb-10">
-              <SavePollen />
           </section>
       </>
   );
