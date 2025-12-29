@@ -67,7 +67,8 @@ const getPollenDataFromExternalAPI = async (req, res) => {
             mugwort_pollen: pollenIntensityScale[3],
             olive_pollen: pollenIntensityScale[4],
             ragweed_pollen: pollenIntensityScale[5],
-            highest_pollen_intensity_index: maxIndex
+            highest_pollen_intensity_index: maxIndex,
+            highest_pollen_intensity: maxIntensity
         };
 
         res.json(pollenData);

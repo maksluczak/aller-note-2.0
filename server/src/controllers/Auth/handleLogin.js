@@ -1,6 +1,7 @@
 const User = require("../../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Location = require("../../models/Location");
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET ?? "";
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET ?? "";
@@ -20,10 +21,12 @@ const handleLogin = async (req, res) => {
             return res.status(401).json({ message: "User does not exist." });
         }
 
+        const userLocation = await Location.findById(foundUser.userLocation);
+
         const isPasswordMatched = await bcrypt.compare(password, foundUser.password);
         if (isPasswordMatched) {
-            const accessToken = jwt.sign({ _id: foundUser._id, email: foundUser.email }, ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
-            const refreshToken = jwt.sign({ _id: foundUser._id, email: foundUser.email}, REFRESH_TOKEN_SECRET, { expiresIn: "7d"});
+            const accessToken = jwt.sign({ _id: foundUser._id, email: foundUser.email, location: userLocation.voivodeship }, ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+            const refreshToken = jwt.sign({ _id: foundUser._id, email: foundUser.email, location: userLocation.voivodeship }, REFRESH_TOKEN_SECRET, { expiresIn: "7d"});
 
             foundUser.refreshToken = refreshToken;
             await foundUser.save();

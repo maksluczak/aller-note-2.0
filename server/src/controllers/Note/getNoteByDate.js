@@ -8,15 +8,15 @@ const getNoteByDate = async (req, res) => {
         const note = await Note.findOne({ noteUser: userId, noteDate: noteDate });
 
         if (!note) {
-            return res.status(404).json({ message: "Note not found." });
+            return res.status(200).json({ message: "Note does not exist yet", note: null });
         }
 
         return res.status(200).json({
-            message: "Note found succesfully.",
+            message: "Note found succesfully",
             note: note
         });
     } catch (err) {
-        return res.status(500).json({ message: "An error occurred, note cannot be find." });
+        return res.status(500).json({ message: "An error occurred, note cannot be find" });
     }
 };
 
