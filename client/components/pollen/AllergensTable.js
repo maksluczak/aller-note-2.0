@@ -43,6 +43,11 @@ export default function AllergensTable({ defaultLocation, VOIVODESHIPS }) {
         fetchPollenData();
     }, [defaultLocation]);
 
+    const handleSavePollen = (event) => {
+        event.preventDefault();
+        // TODO: create json to send to db
+    }
+
   return (
       <>
           <section className="pb-12">
