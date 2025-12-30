@@ -34,3 +34,15 @@ export const changePasswordSchema = z.object({
     message: "Hasła muszą być takie same",
     path: ["repeatedPassword"]
 });
+
+export const noteSchema = z.object({
+    free_note: z
+        .string()
+        .max(500, "Notatka może mieć maksymalnie 500 znaków")
+        .optional()
+        .transform((val) => val?.trim() ?? "")
+        .refine(
+            (val) => val === "" || val.length > 0,
+            "Notatka nie może zawierać samych spacji"
+        )
+});
