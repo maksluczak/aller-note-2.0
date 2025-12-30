@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { apiFetch } from "@/lib/api";
 import LocationSection from "@/components/settings/LocationSection";
-import {VOIVODESHIPS} from "@/lib/voivodeships";
+import { VOIVODESHIPS } from "@/lib/voivodeships";
+import { usernameSchema, changePasswordSchema } from "@/lib/validationSchemas";
 
 export default function SettingsPage() {
     const { user, logout } = useAuth();
@@ -42,9 +43,25 @@ export default function SettingsPage() {
     async function submitHandler(type) {
         if (!userId) return false;
 
-        if (type === "password" && inputPassword !== inputRepeatedPassword) {
-            alert("Hasła się nie zgadzają");
-            return false;
+        if (type === "username") {
+            const result = usernameSchema.safeParse(inputUsername);
+
+            if (!result.success) {
+                alert(result.error.errors[0].message);
+                return false;
+            }
+        }
+
+        if (type === "password") {
+            const result = changePasswordSchema.safeParse({
+                password: inputPassword,
+                repeatedPassword: inputRepeatedPassword,
+            });
+
+            if (!result.success) {
+                alert(result.error.errors[0].message);
+                return false;
+            }
         }
 
         try {
@@ -98,8 +115,6 @@ export default function SettingsPage() {
             setIsEditingPassword(false);
         }
     }
-
-    console.log("user", user);
 
     if (!user) return <p className="flex flex-col gap-5 pt-24 pb-10 lg:min-h-[calc(100vh-40px)]">Musisz być zalogowany, aby korzystać z ustawień.</p>
 

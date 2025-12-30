@@ -6,159 +6,158 @@ import LinkUnderline from "../buttons/LinkUnderline";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { apiFetch } from "@/lib/api";
+import { loginSchema, registerSchema } from "@/lib/validationSchemas";
 
-export default function Form({
-  password,
-  nickname,
-  email,
-  btnText,
-  registration = false,
-}) {
-  const router = useRouter();
-  const [inputName, setInputName] = useState("");
-  const [inputEmail, setInputEmail] = useState("");
-  const [inputPassword, setInputPassword] = useState("");
-  const [inputRepeatedPassword, setInputRepeatedPassword] = useState("");
-  const [defaultLocation, setDefaultLocation] = useState("");
+export default function Form({ password, nickname, email, btnText, registration = false }) {
+    const router = useRouter();
+    const [inputName, setInputName] = useState("");
+    const [inputEmail, setInputEmail] = useState("");
+    const [inputPassword, setInputPassword] = useState("");
+    const [inputRepeatedPassword, setInputRepeatedPassword] = useState("");
+    const [defaultLocation, setDefaultLocation] = useState("");
 
-  const { login } = useAuth();
+    const { login } = useAuth();
 
-  useEffect(() => {
-    console.table({
-      inputName,
-      inputEmail,
-      inputPassword,
-      inputRepeatedPassword,
-    });
+    useEffect(() => {
+        console.table({
+            inputName,
+            inputEmail,
+            inputPassword,
+            inputRepeatedPassword,
+        });
 
-    const fetchDefaultLocationId = async () => {
-      const data = await apiFetch(`/location/Małopolskie`, {
-        method: "GET",
-      });
-      setDefaultLocation(data.id);
-    };
+        const fetchDefaultLocationId = async () => {
+            const data = await apiFetch(`/location/Małopolskie`, {
+                method: "GET",
+            });
+            setDefaultLocation(data.id);
+        };
 
-    fetchDefaultLocationId();
-  }, [inputName, inputEmail, inputPassword, inputRepeatedPassword]);
+        fetchDefaultLocationId();
+    }, [inputName, inputEmail, inputPassword, inputRepeatedPassword]);
 
-  async function submitHandler(e) {
-    e.preventDefault();
+    async function submitHandler(e) {
+        e.preventDefault();
 
-    if (
-      registration &&
-      (!inputName || !inputEmail || !inputPassword || !inputRepeatedPassword)
-    ) {
-      alert("Uzupełnij wszystkie pola.");
-      return;
-    } else if (!registration && (!inputEmail || !inputPassword)) {
-      alert("Uzupełnij wszystkie pola.");
-      return;
-    }
+        const formData = {
+            email: inputEmail,
+            password: inputPassword,
+        };
 
-    if (registration && inputPassword !== inputRepeatedPassword) {
-      alert("Hasła się nie zgadzają.");
-      return;
-    }
+        if (registration) {
+            Object.assign(formData, {
+                username: inputName,
+                repeatedPassword: inputRepeatedPassword,
+            });
+        }
+        const schema = registration ? registerSchema : loginSchema;
+        const result = schema.safeParse(formData);
 
-    try {
-      const path = registration ? "/auth/register" : "/auth/login";
-      const body = registration
-        ? { username: inputName, email: inputEmail, password: inputPassword, defaultLocation: defaultLocation}
-        : { email: inputEmail, password: inputPassword };
-
-      const res = await fetch(`http://localhost:8080${path}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", 
-        body: JSON.stringify(body),
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        console.error("Błąd:", data.message || res.statusText);
-        alert(data.message || "Błąd logowania/rejestracji");
-        return;
-      }
-
-      if (registration) {
-        alert("Zarejestrowano pomyślnie. Zaloguj się.");
-        clearInputs();
-        router.push("/login");
-      } else {
-        if (!data.accessToken) {
-          alert("Błąd serwera — brak tokena.");
-          return;
+        if (!result.success) {
+            const firstError = result.error.errors[0].message;
+            alert(firstError);
+            return;
         }
 
-        await login(data.accessToken);
-        clearInputs();
-      }
-    } catch (err) {
-      console.error("Błąd:", err);
-      alert("Błąd serwera lub połączenia.");
+        try {
+            const path = registration ? "/auth/register" : "/auth/login";
+            const body = registration
+                ? { username: inputName, email: inputEmail, password: inputPassword, defaultLocation: defaultLocation}
+                : { email: inputEmail, password: inputPassword };
+
+            const res = await fetch(`http://localhost:8080${path}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(body),
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                console.error("Błąd:", data.message || res.statusText);
+                alert(data.message || "Błąd logowania/rejestracji");
+                return;
+            }
+
+            if (registration) {
+                alert("Zarejestrowano pomyślnie. Zaloguj się.");
+                clearInputs();
+                router.push("/login");
+            } else {
+                if (!data.accessToken) {
+                    alert("Błąd serwera - brak tokena.");
+                    return;
+                }
+
+                await login(data.accessToken);
+                clearInputs();
+            }
+        } catch (err) {
+            console.error("Błąd:", err);
+            alert("Błąd serwera lub połączenia.");
+        }
     }
-  }
 
-  function clearInputs() {
-    setInputName("");
-    setInputEmail("");
-    setInputPassword("");
-    setInputRepeatedPassword("");
-  }
+    function clearInputs() {
+        setInputName("");
+        setInputEmail("");
+        setInputPassword("");
+        setInputRepeatedPassword("");
+    }
 
-  return (
-    <form onSubmit={submitHandler} className="flex flex-col gap-8">
-      {nickname && registration && (
-        <InputBox
-          value={inputName}
-          onChange={(e) => setInputName(e.target.value)}
-          type="text"
-          id="nickname"
-          label="nazwa użytkownika"
-          placeholder="Gustaw"
-        />
-      )}
-      {email && (
-        <InputBox
-          value={inputEmail}
-          onChange={(e) => setInputEmail(e.target.value)}
-          type="email"
-          id="email"
-          label="email"
-          placeholder="example@gmail.com"
-        />
-      )}
-      {password && (
-        <InputBox
-          value={inputPassword}
-          onChange={(e) => setInputPassword(e.target.value)}
-          type="password"
-          id="password"
-          label="hasło"
-          placeholder="**********"
-        />
-      )}
-      {password && registration && (
-        <InputBox
-          value={inputRepeatedPassword}
-          onChange={(e) => setInputRepeatedPassword(e.target.value)}
-          type="password"
-          id="repeatedPassword"
-          label="powtórz hasło"
-          placeholder="**********"
-        />
-      )}
+    return (
+        <form onSubmit={submitHandler} className="flex flex-col gap-8">
+            {nickname && registration && (
+                <InputBox
+                    value={inputName}
+                    onChange={(e) => setInputName(e.target.value)}
+                    type="text"
+                    id="nickname"
+                    label="nazwa użytkownika"
+                    placeholder="Gustaw"
+                />
+            )}
+            {email && (
+                <InputBox
+                    value={inputEmail}
+                    onChange={(e) => setInputEmail(e.target.value)}
+                    type="email"
+                    id="email"
+                    label="email"
+                    placeholder="example@gmail.com"
+                />
+            )}
+            {password && (
+                <InputBox
+                    value={inputPassword}
+                    onChange={(e) => setInputPassword(e.target.value)}
+                    type="password"
+                    id="password"
+                    label="hasło"
+                    placeholder="**********"
+                />
+            )}
+            {password && registration && (
+                <InputBox
+                    value={inputRepeatedPassword}
+                    onChange={(e) => setInputRepeatedPassword(e.target.value)}
+                    type="password"
+                    id="repeatedPassword"
+                    label="powtórz hasło"
+                    placeholder="**********"
+                />
+            )}
 
-      <div className="flex mt-8 flex-col gap-2 items-center">
-        <ButtonPrimary type="submit">{btnText}</ButtonPrimary>
-        {!registration && (
-          <p className="text-center">
-            <span className="text-white/85">Nie masz konta?</span>{" "}
-            <LinkUnderline href="/rejestracja" text="Zarejestruj się" />
-          </p>
-        )}
-      </div>
-    </form>
-  );
+            <div className="flex mt-8 flex-col gap-2 items-center">
+                <ButtonPrimary type="submit">{btnText}</ButtonPrimary>
+                {!registration && (
+                    <p className="text-center">
+                        <span className="text-white/85">Nie masz konta?</span>{" "}
+                        <LinkUnderline href="/rejestracja" text="Zarejestruj się" />
+                    </p>
+                )}
+            </div>
+        </form>
+    );
 }
