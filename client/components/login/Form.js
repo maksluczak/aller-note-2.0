@@ -19,22 +19,19 @@ export default function Form({ password, nickname, email, btnText, registration 
     const { login } = useAuth();
 
     useEffect(() => {
-        console.table({
-            inputName,
-            inputEmail,
-            inputPassword,
-            inputRepeatedPassword,
-        });
-
         const fetchDefaultLocationId = async () => {
-            const data = await apiFetch(`/location/Małopolskie`, {
-                method: "GET",
-            });
-            setDefaultLocation(data.id);
+            try {
+                const data = await apiFetch(`/location/Małopolskie`);
+                if (data) setDefaultLocation(data.id);
+            } catch (err) {
+                console.error("Błąd pobierania lokalizacji:", err);
+            }
         };
 
-        fetchDefaultLocationId();
-    }, [inputName, inputEmail, inputPassword, inputRepeatedPassword]);
+        if (registration) {
+            fetchDefaultLocationId();
+        }
+    }, [registration]);
 
     async function submitHandler(e) {
         e.preventDefault();
@@ -42,60 +39,48 @@ export default function Form({ password, nickname, email, btnText, registration 
         const formData = {
             email: inputEmail,
             password: inputPassword,
+            ...(registration && {
+                username: inputName,
+                repeatedPassword: inputRepeatedPassword
+            })
         };
 
-        if (registration) {
-            Object.assign(formData, {
-                username: inputName,
-                repeatedPassword: inputRepeatedPassword,
-            });
-        }
         const schema = registration ? registerSchema : loginSchema;
         const result = schema.safeParse(formData);
 
         if (!result.success) {
-            const firstError = result.error.errors[0].message;
-            alert(firstError);
+            alert(result.error.errors[0].message);
             return;
         }
 
         try {
             const path = registration ? "/auth/register" : "/auth/login";
             const body = registration
-                ? { username: inputName, email: inputEmail, password: inputPassword, defaultLocation: defaultLocation}
+                ? { username: inputName, email: inputEmail, password: inputPassword, defaultLocation }
                 : { email: inputEmail, password: inputPassword };
 
-            const res = await fetch(`http://localhost:8080${path}`, {
+            const data = await apiFetch(path, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
                 body: JSON.stringify(body),
+                auth: false,
             });
-
-            const data = await res.json().catch(() => ({}));
-
-            if (!res.ok) {
-                console.error("Błąd:", data.message || res.statusText);
-                alert(data.message || "Błąd logowania/rejestracji");
-                return;
-            }
 
             if (registration) {
                 alert("Zarejestrowano pomyślnie. Zaloguj się.");
                 clearInputs();
                 router.push("/login");
             } else {
-                if (!data.accessToken) {
-                    alert("Błąd serwera - brak tokena.");
-                    return;
+                if (data && data.accessToken) {
+                    await login(data.accessToken);
+                    clearInputs();
+                    router.push("/kalendarz");
+                } else {
+                    throw new Error("Brak tokena w odpowiedzi serwera");
                 }
-
-                await login(data.accessToken);
-                clearInputs();
             }
         } catch (err) {
             console.error("Błąd:", err);
-            alert("Błąd serwera lub połączenia.");
+            alert(err.message || "Wystąpił błąd podczas autoryzacji.");
         }
     }
 
