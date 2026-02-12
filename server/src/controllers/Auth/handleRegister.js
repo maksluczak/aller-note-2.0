@@ -30,7 +30,6 @@ const handleRegister = async (req, res) => {
             userLocation: defaultLocation
         });
 
-        console.log(newUser);
         res.status(201).json({ success: `New user ${username} created!` });
     } catch (err) {
         res.status(400).json({ message: "Error in signing up", body: err });
