@@ -4,7 +4,7 @@
 _Full-stack project for portfolio purposes_
 
 **Project demo:**  
-➡️ 
+➡️ https://aller-note-2-0.vercel.app/
 
 ---
 
