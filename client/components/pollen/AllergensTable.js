@@ -3,8 +3,10 @@ import React, {useEffect} from "react";
 import IntensityLabel from "./IntensityLabel";
 import {useState} from "react";
 import {apiFetch} from "@/lib/api";
+import Spinner from "@/components/loading/Spinner";
 
 export default function AllergensTable({ defaultLocation, VOIVODESHIPS }) {
+    const [isLoading, setIsLoading] = useState(false);
     const [alderPollenIntensity, setAlderPollenIntensity] = useState(0);
     const [birchPollenIntensity, setBirchPollenIntensity] = useState(0);
     const [grassPollenIntensity, setGrassPollenIntensity] = useState(0);
@@ -23,6 +25,7 @@ export default function AllergensTable({ defaultLocation, VOIVODESHIPS }) {
 
     useEffect(() => {
         const fetchPollenData = async () => {
+            setIsLoading(true);
             const voivodeship = VOIVODESHIPS[defaultLocation].name;
             try {
                 const data = await apiFetch(`/pollen/${voivodeship}`);
@@ -36,37 +39,47 @@ export default function AllergensTable({ defaultLocation, VOIVODESHIPS }) {
                 }
             } catch (err) {
                 console.log({error: err, message: "Error fetching data"});
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchPollenData();
     }, [defaultLocation]);
 
-  return (
-      <>
-          <section className="pb-12 lg:pb-40">
-              <ul className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-32">
-                  <header className="grid gap-3 py-5 px-4 grid-cols-2 lg:grid-cols-[1fr_.7fr] border-b border-gray-200 font-light uppercase">
-                      <span>Nazwa</span>
-                      <span>Nasilenie</span>
-                  </header>
-                  <header className="hidden py-5 px-4 lg:grid gap-3 grid-cols-2 lg:grid-cols-[1fr_.7fr] border-b border-gray-200 font-light uppercase">
-                      <span>Nazwa</span>
-                      <span>Nasilenie</span>
-                  </header>
-                  {POLLEN_DATA.map(({ name, intensity }) => (
-                      <li
-                          key={name}
-                          className="grid gap-3 py-5 px-4 grid-cols-2 lg:grid-cols-[1fr_.7fr] items-center border-b border-gray-200"
-                      >
-                          <span>{name}</span>
-                          <div>
-                              <IntensityLabel intensity={intensity} />
-                          </div>
-                      </li>
-                  ))}
-              </ul>
-          </section>
-      </>
-  );
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <Spinner />
+            </div>
+        );
+    }
+
+    return (
+        <>
+            <section className="pb-12 lg:pb-40">
+                <ul className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-32">
+                    <header className="grid gap-3 py-5 px-4 grid-cols-2 lg:grid-cols-[1fr_.7fr] border-b border-gray-200 font-light uppercase">
+                        <span>Nazwa</span>
+                        <span>Nasilenie</span>
+                    </header>
+                    <header className="hidden py-5 px-4 lg:grid gap-3 grid-cols-2 lg:grid-cols-[1fr_.7fr] border-b border-gray-200 font-light uppercase">
+                        <span>Nazwa</span>
+                        <span>Nasilenie</span>
+                    </header>
+                    {POLLEN_DATA.map(({ name, intensity }) => (
+                        <li
+                            key={name}
+                            className="grid gap-3 py-5 px-4 grid-cols-2 lg:grid-cols-[1fr_.7fr] items-center border-b border-gray-200"
+                        >
+                            <span>{name}</span>
+                            <div>
+                                <IntensityLabel intensity={intensity} />
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        </>
+    );
 }

@@ -8,6 +8,7 @@ import ButtonPrimary from "../buttons/ButtonPrimary";
 import { apiFetch } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { noteSchema } from "@/lib/validationSchemas";
+import Spinner from "@/components/loading/Spinner";
 
 export default function SymptomsNote({ selectedDate }) {
     const today = new Date();
@@ -16,6 +17,7 @@ export default function SymptomsNote({ selectedDate }) {
 
     const { user } = useAuth();
 
+    const [isLoading, setIsLoading] = useState(false);
     const [samopoczucie, setSamopoczucie] = useState(null);
     const [bolGlowy, setBolGlowy] = useState(null);
     const [katar, setKatar] = useState(null);
@@ -64,6 +66,7 @@ export default function SymptomsNote({ selectedDate }) {
         if (!user) return;
 
         const fetchNote = async () => {
+            setIsLoading(true);
             try {
                 const data = await apiFetch(`/note/${selectedDateForBackend}`);
 
@@ -88,6 +91,8 @@ export default function SymptomsNote({ selectedDate }) {
                     console.error("Brak notatki lub błąd pobierania:", err.message);
                     resetForm();
                 }
+            } finally {
+                setIsLoading(false);
             }
         };
         fetchNote();
@@ -109,6 +114,7 @@ export default function SymptomsNote({ selectedDate }) {
         e.preventDefault();
         setIsEditing(false);
 
+        setIsLoading(true);
         const validation = noteSchema.safeParse({
             free_note: note,
         });
@@ -145,12 +151,23 @@ export default function SymptomsNote({ selectedDate }) {
                 setNoteExists(true);
                 console.log("Utworzono nową notatkę");
             }
+            setIsEditing(false);
         } catch (err) {
             console.error("Błąd zapisu notatki:", err.message);
+        } finally {
+            setIsLoading(false);
         }
     }
 
     if (!user) return <p>Musisz być zalogowany, aby dodać notatkę.</p>;
+
+    if (isLoading && !isEditing && !noteExists) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <Spinner />
+            </div>
+        );
+    }
 
     return (
         <section className="flex flex-col">
