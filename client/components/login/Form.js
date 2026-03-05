@@ -10,6 +10,8 @@ import { loginSchema, registerSchema } from "@/lib/validationSchemas";
 
 export default function Form({ password, nickname, email, btnText, registration = false }) {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingText, setLoadingText] = useState("");
     const [inputName, setInputName] = useState("");
     const [inputEmail, setInputEmail] = useState("");
     const [inputPassword, setInputPassword] = useState("");
@@ -53,6 +55,9 @@ export default function Form({ password, nickname, email, btnText, registration 
             return;
         }
 
+        setLoadingText(registration ? "Rejestracja..." : "Logowanie...");
+        setIsLoading(true);
+
         try {
             const path = registration ? "/auth/register" : "/auth/login";
             const body = registration
@@ -81,6 +86,8 @@ export default function Form({ password, nickname, email, btnText, registration 
         } catch (err) {
             console.error("Błąd:", err);
             alert(err.message || "Wystąpił błąd podczas autoryzacji.");
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -135,7 +142,10 @@ export default function Form({ password, nickname, email, btnText, registration 
             )}
 
             <div className="flex mt-8 flex-col gap-2 items-center">
-                <ButtonPrimary type="submit">{btnText}</ButtonPrimary>
+                <ButtonPrimary type="submit" disabled={isLoading}>
+                    {isLoading ? loadingText : btnText}
+                </ButtonPrimary>
+
                 {!registration && (
                     <p className="text-center">
                         <span className="text-white/85">Nie masz konta?</span>{" "}
