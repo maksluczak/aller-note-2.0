@@ -109,7 +109,6 @@ export default function Home() {
 
     return (
         <>
-            {/* ── HERO ── */}
             <section className="relative flex flex-col items-center justify-center gap-20 pt-32 pb-10 min-h-[calc(100vh-40px)]">
                 <header className="relative w-full text-center font-bold text-white select-none">
                     <h1
@@ -135,7 +134,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* ── PROBLEM / WARTOŚĆ ── */}
             <section className="py-24 max-w-3xl mx-auto text-center px-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-eden-700 font-semibold mb-4">
                     Czy to brzmi znajomo?
