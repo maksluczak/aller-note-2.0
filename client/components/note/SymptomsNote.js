@@ -112,17 +112,18 @@ export default function SymptomsNote({ selectedDate }) {
 
     async function submitHandler(e) {
         e.preventDefault();
-        setIsEditing(false);
 
-        setIsLoading(true);
         const validation = noteSchema.safeParse({
             free_note: note,
         });
 
         if (!validation.success) {
-            alert(validation.error.errors[0].message);
+            alert(validation.error.issues[0].message);
             return;
         }
+
+        setIsEditing(false);
+        setIsLoading(true);
         const validatedNote = validation.data.free_note;
 
         const body = {

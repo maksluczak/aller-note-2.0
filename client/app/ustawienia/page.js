@@ -6,6 +6,7 @@ import { apiFetch } from "@/lib/api";
 import LocationSection from "@/components/settings/LocationSection";
 import { VOIVODESHIPS } from "@/lib/voivodeships";
 import { usernameSchema, changePasswordSchema } from "@/lib/validationSchemas";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function SettingsPage() {
     const { user, logout } = useAuth();
@@ -47,7 +48,7 @@ export default function SettingsPage() {
             const result = usernameSchema.safeParse(inputUsername);
 
             if (!result.success) {
-                alert(result.error.errors[0].message);
+                alert(result.error.issues[0].message);
                 return false;
             }
         }
@@ -59,7 +60,7 @@ export default function SettingsPage() {
             });
 
             if (!result.success) {
-                alert(result.error.errors[0].message);
+                alert(result.error.issues[0].message);
                 return false;
             }
         }
@@ -116,110 +117,110 @@ export default function SettingsPage() {
         }
     }
 
-    if (!user) return <p className="flex flex-col gap-5 pt-24 pb-10 lg:min-h-[calc(100vh-40px)]">Musisz być zalogowany, aby korzystać z ustawień.</p>
-
     return (
-        <section className="flex flex-col gap-5 pt-24 pb-10 lg:min-h-[calc(100vh-40px)]">
-            <header className="grid gap-3 py-5 px-4 grid-cols-2 lg:grid-cols-[1fr_.7fr] border-b border-gray-200 text-4xl font-bold">
-                Ustawienia
-            </header>
+        <ProtectedRoute>
+            <section className="flex flex-col gap-5 pt-24 pb-10 lg:min-h-[calc(100vh-40px)]">
+                <header className="grid gap-3 py-5 px-4 grid-cols-2 lg:grid-cols-[1fr_.7fr] border-b border-gray-200 text-4xl font-bold">
+                    Ustawienia
+                </header>
 
-            <div className="py-5 px-4">
-                <label className="text-gray-800 text-2xl font-bold block mb-2">
-                    Edytuj nazwę użytkownika
-                </label>
-                <div className="relative flex items-center gap-2">
-                    <input
-                        type="text"
-                        value={isEditingUsername ? inputUsername : username}
-                        onChange={(e) => setInputUsername(e.target.value)}
-                        disabled={!isEditingUsername}
-                        className="w-full text-gray-800 text-base pl-2 pr-2 py-3 border-b-2 border-black outline-none bg-transparent"
-                    />
-                    {!isEditingUsername ? (
-                        <button
-                            className="px-4 py-2 rounded-full border border-black"
-                            onClick={() => setIsEditingUsername(true)}
-                        >
-                            Edytuj
-                        </button>
-                    ) : (
-                        <>
+                <div className="py-5 px-4">
+                    <label className="text-gray-800 text-2xl font-bold block mb-2">
+                        Edytuj nazwę użytkownika
+                    </label>
+                    <div className="relative flex items-center gap-2">
+                        <input
+                            type="text"
+                            value={isEditingUsername ? inputUsername : username}
+                            onChange={(e) => setInputUsername(e.target.value)}
+                            disabled={!isEditingUsername}
+                            className="w-full text-gray-800 text-base pl-2 pr-2 py-3 border-b-2 border-black outline-none bg-transparent"
+                        />
+                        {!isEditingUsername ? (
                             <button
-                                className="px-4 py-2 rounded-full border border-green-600 text-green-600"
-                                onClick={async () => {
-                                    const ok = await submitHandler("username");
-                                    if (ok) logout();
-                                }}
+                                className="px-4 py-2 rounded-full border border-black"
+                                onClick={() => setIsEditingUsername(true)}
                             >
-                                Zapisz
+                                Edytuj
                             </button>
-                            <button
-                                className="px-4 py-2 rounded-full border border-red-600 text-red-600"
-                                onClick={() => cancelEdit("username")}
-                            >
-                                Anuluj
-                            </button>
-                        </>
-                    )}
+                        ) : (
+                            <>
+                                <button
+                                    className="px-4 py-2 rounded-full border border-green-600 text-green-600"
+                                    onClick={async () => {
+                                        const ok = await submitHandler("username");
+                                        if (ok) logout();
+                                    }}
+                                >
+                                    Zapisz
+                                </button>
+                                <button
+                                    className="px-4 py-2 rounded-full border border-red-600 text-red-600"
+                                    onClick={() => cancelEdit("username")}
+                                >
+                                    Anuluj
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            <div className="py-5 px-4">
-                <label className="text-gray-800 text-2xl font-bold block mb-2">
-                    Edytuj hasło
-                </label>
-                <div className="flex flex-col gap-4">
-                    <input
-                        type="password"
-                        value={inputPassword}
-                        onChange={(e) => setInputPassword(e.target.value)}
-                        disabled={!isEditingPassword}
-                        className="w-full text-gray-800 text-base pl-2 pr-2 py-3 border-b-2 border-black outline-none bg-transparent"
-                    />
-                    <input
-                        type="password"
-                        value={inputRepeatedPassword}
-                        onChange={(e) => setInputRepeatedPassword(e.target.value)}
-                        disabled={!isEditingPassword}
-                        className="w-full text-gray-800 text-base pl-2 pr-2 py-3 border-b-2 border-black outline-none bg-transparent"
-                    />
+                <div className="py-5 px-4">
+                    <label className="text-gray-800 text-2xl font-bold block mb-2">
+                        Edytuj hasło
+                    </label>
+                    <div className="flex flex-col gap-4">
+                        <input
+                            type="password"
+                            value={inputPassword}
+                            onChange={(e) => setInputPassword(e.target.value)}
+                            disabled={!isEditingPassword}
+                            className="w-full text-gray-800 text-base pl-2 pr-2 py-3 border-b-2 border-black outline-none bg-transparent"
+                        />
+                        <input
+                            type="password"
+                            value={inputRepeatedPassword}
+                            onChange={(e) => setInputRepeatedPassword(e.target.value)}
+                            disabled={!isEditingPassword}
+                            className="w-full text-gray-800 text-base pl-2 pr-2 py-3 border-b-2 border-black outline-none bg-transparent"
+                        />
 
-                    {!isEditingPassword ? (
-                        <button
-                            className="px-4 py-2 rounded-full border border-black w-fit"
-                            onClick={() => setIsEditingPassword(true)}
-                        >
-                            Edytuj
-                        </button>
-                    ) : (
-                        <div className="flex gap-2">
+                        {!isEditingPassword ? (
                             <button
-                                className="px-4 py-2 rounded-full border border-green-600 text-green-600"
-                                onClick={async () => {
-                                    const ok = await submitHandler("password");
-                                    if (ok) logout();
-                                }}
+                                className="px-4 py-2 rounded-full border border-black w-fit"
+                                onClick={() => setIsEditingPassword(true)}
                             >
-                                Zapisz
+                                Edytuj
                             </button>
-                            <button
-                                className="px-4 py-2 rounded-full border border-red-600 text-red-600"
-                                onClick={() => cancelEdit("password")}
-                            >
-                                Anuluj
-                            </button>
-                        </div>
-                    )}
+                        ) : (
+                            <div className="flex gap-2">
+                                <button
+                                    className="px-4 py-2 rounded-full border border-green-600 text-green-600"
+                                    onClick={async () => {
+                                        const ok = await submitHandler("password");
+                                        if (ok) logout();
+                                    }}
+                                >
+                                    Zapisz
+                                </button>
+                                <button
+                                    className="px-4 py-2 rounded-full border border-red-600 text-red-600"
+                                    onClick={() => cancelEdit("password")}
+                                >
+                                    Anuluj
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            <LocationSection
-                defaultLocation={defaultLocation}
-                setDefaultLocation={setDefaultLocation}
-                userId={userId}
-                onReload={fetchUser}
-            />
-        </section>
+                <LocationSection
+                    defaultLocation={defaultLocation}
+                    setDefaultLocation={setDefaultLocation}
+                    userId={userId}
+                    onReload={fetchUser}
+                />
+            </section>
+        </ProtectedRoute>
     );
 }
