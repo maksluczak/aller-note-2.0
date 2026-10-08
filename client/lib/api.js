@@ -1,6 +1,6 @@
 import { getToken, setToken, clearToken } from "@/lib/tokenStore";
 
-export const API_URL = "https://aller-note-2-0.onrender.com";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://aller-note-2-0.onrender.com";
 
 async function rawFetch(path, options = {}) {
     const token = getToken();

@@ -10,13 +10,12 @@ _Full-stack project for portfolio purposes_
 
 ## Project Overview
 
-Aller Note 2.0 is a **full-stack web application designed to support allergy management** by combining two key functionalities:
+Aller Note 2.0 is a full-stack web application designed to support allergy management by combining two key functionalities:
 
-1. **Recording allergy symptoms in structured notes**
-2. **Tracking pollen intensity levels**
+1. Recording allergy symptoms in structured notes
+2. Tracking pollen intensity levels
 
 The application allows users to document allergy symptoms over time while simultaneously monitoring pollen exposure, enabling better understanding of symptom patterns.
-The current version represents a completed **MVP**, with additional features planned for further development.
 
 ---
 
@@ -33,6 +32,44 @@ The current version represents a completed **MVP**, with additional features pla
 - **Next.js** – User interface layer
 - **Tailwind CSS** – Responsive layout
 - **HTTP client** – API communication
+
+---
+
+## Getting Started (Local Setup)
+
+### Prerequisites
+- Node.js 18+
+- Docker or MongoDB/Atlas instance
+
+### Docker database (`database/`)
+```bash
+cd database
+docker compose up -d
+```
+Starts a local MongoDB on `localhost:27018`, with the 16 Polish voivodeships pre-seeded as `Location` documents.
+```bash
+docker compose ps   # STATUS should say "healthy"
+```
+
+### Backend (`server/`)
+```bash
+cd server
+npm install
+cp .env.example .env
+# edit .env: generate ACCESS_TOKEN_SECRET / REFRESH_TOKEN_SECRET / ADMIN_API_KEY
+# the default DATABASE_URI matches the Docker setup
+npm run dev
+```
+The API runs on `http://localhost:5050` by default.
+
+### Frontend (`client/`)
+```bash
+cd client
+npm install
+cp .env.example .env.local
+npm run dev
+```
+The app runs on `http://localhost:3000`.
 
 ---
 

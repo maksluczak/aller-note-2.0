@@ -1,0 +1,20 @@
+name: aller-note-db
+services:
+  mongodb:
+    image: mongodb/mongodb-atlas-local:8.0
+    hostname: mongodb
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=user
+      - MONGODB_INITDB_ROOT_PASSWORD=pass
+      - MONGODB_INITDB_DATABASE=AllerNote
+    ports:
+      - 27018:27017
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - db:/data/db
+      - configdb:/data/configdb
+      - mongot:/data/mongot
+volumes:
+  db:
+  configdb:
+  mongot:
